@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>数据结构--队列 | 暮色雨声</title>
+<meta name="description" content="专注于java技术栈">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://425324438.github.io//favicon.ico?v=1558852253940">
+<link rel="stylesheet" href="https://425324438.github.io//styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://425324438.github.io/">
+        <img src="https://425324438.github.io//images/avatar.png?v=1558852253940" class="site-logo">
+        <h1 class="site-title">暮色雨声</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/425324438?tab=repositories" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      专注于java技术栈
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">数据结构--队列</h2>
+            <div class="post-date">2019-05-26</div>
+            
+              <div class="feature-container" style="background-image: url('https://425324438.github.io//post-images/shu-ju-jie-gou-dui-lie.jpg')">
+              </div>
+            
+            <div class="post-content">
+              <h1 id="queu队列">Queu：队列</h1>
+<pre><code>	队列先进先出原则，比栈要复杂一点
+</code></pre>
+<ol>
+<li>队列：先进先出原则，内部数组对外部不可见，只能通过提供的方法来获取内部数据</li>
+<li>核心方法：</li>
+</ol>
+<blockquote>
+<pre><code>   enqueue：从队列尾部添加数据
+   dequeu: 从队列头部获取数据,并删除头部数据
+   head: 查看队列第一个数据
+   tail: 查看队列最后一位数据
+   isEmpty: 判断队列是否为空
+   clear: 清空队列数据  		
+</code></pre>
+</blockquote>
+<pre><code>			如果有需要的话可以自行扩展
+</code></pre>
+<ol start="3">
+<li>java代码</li>
+</ol>
+<pre><code class="language-java">
+public class IQueu {
+
+    //队列，先进先出原则，不允许插队
+    private Object[] body;
+
+    //标记队列的头部
+    private int head;
+
+    //标记队列的尾部
+    private int tail;
+
+    //标记队列内容长度
+    private int size;
+
+    public IQueu(){
+        this.body = new Object[10];
+        this.head = 0;
+        this.tail = 0;
+    }
+
+    /**
+     * 从队列尾部添加数据
+     */
+    public void enqueue(Object val){
+
+        if(this.tail == this.body.length &amp;&amp; this.body[0] != null){
+            //扩容
+            Object[] newArray = new Object[this.tail * 2];
+            System.arraycopy(this.body, 0, newArray, 0, this.tail);
+            this.body = newArray;
+//            throw new RuntimeException(&quot;队列已达到最大长度&quot;);
+        } else {
+            this.body[tail] = val;
+            this.tail++;
+        }
+        if(tail == body.length){
+            tail = 0;
+        }
+        size ++;
+    }
+
+    /**
+     * 从队列头部获取数据,并删除头部数据
+     */
+    public Object dequeu(){
+        Object val = this.body[this.head];
+        this.body[this.head] = null;
+        this.head++;
+        if(this.head  == this.body.length){
+            this.head = 0;
+        }
+        size --;
+        return val;
+    }
+
+    public Object head(){
+        return this.body[this.head];
+    }
+
+    public Object tail(){
+        return this.body[this.tail];
+    }
+
+    public boolean isEmpty(){
+        System.out.println(&quot;队列头部的位置&quot;+this.head+&quot;，尾部的位置&quot;+this.tail+&quot;,队列长度：&quot;+this.size);
+        return this.size ==0;
+    }
+</code></pre>
+<ol start="4">
+<li>实现一个<a href="https://baijiahao.baidu.com/s?id=1606651492697783298&amp;wfr=spider&amp;for=pc">斐波那契序列</a></li>
+</ol>
+<pre><code class="language-java">    public static void main(String[] args) {
+        IQueu queu = new IQueu();
+        Integer fibonacci = queu.fibonacci(3);
+        System.out.println(fibonacci);
+
+
+    }
+
+    //斐波那契序列
+    public Integer fibonacci(int n){
+        IQueu queu = new IQueu();
+        int index = 0;
+
+        queu.enqueue(1);
+        queu.enqueue(1);
+
+        while (index &lt; n -2){
+
+            //取出队列的第一个元素
+            Integer del_item = (Integer) queu.dequeu();
+
+            Integer head_item = (Integer) queu.head();
+            Integer next_item = head_item + del_item;
+            queu.enqueue(next_item);
+            index ++;
+        }
+
+        queu.dequeu();
+
+        return (Integer)queu.head();
+
+    }
+</code></pre>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://425324438.github.io//post/hello-gridea">
+                  <h3 class="post-title">
+                    Hello Gridea
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+
+<script type="application/javascript">
+
+AOS.init();
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>
