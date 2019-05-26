@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>数据结构--栈 | 暮色雨声</title>
+<meta name="description" content="专注于java技术栈">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://425324438.github.io//favicon.ico?v=1558853764659">
+<link rel="stylesheet" href="https://425324438.github.io//styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://425324438.github.io/">
+        <img src="https://425324438.github.io//images/avatar.png?v=1558853764659" class="site-logo">
+        <h1 class="site-title">暮色雨声</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/425324438?tab=repositories" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      专注于java技术栈
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">数据结构--栈</h2>
+            <div class="post-date">2019-05-26</div>
+            
+              <div class="feature-container" style="background-image: url('https://425324438.github.io//post-images/shu-ju-jie-gou-zhan.jpg')">
+              </div>
+            
+            <div class="post-content">
+              <h1 id="stack栈">stack：栈</h1>
+<pre><code>栈是一种先进后出的数据结构，也是我认为最简单的数据结构。
+</code></pre>
+<ol>
+<li>栈：先进后出原则，栈内数组对外部不可见，只能通过提供的方法来获取栈内数据</li>
+<li>核心方法：</li>
+</ol>
+<blockquote>
+<pre><code>   push：把数据存入栈顶（其实就是数组的尾部）
+   pop: 弹出栈顶元素，并在栈内删除该元素
+   top: 返回栈顶元素，并不删除栈顶元素
+   isEmpty: 返回该栈是否为空
+   size: 返回栈内的元素个数
+   clear: 清空栈内数据	
+</code></pre>
+</blockquote>
+<ol start="3">
+<li>java代码</li>
+</ol>
+<pre><code class="language-java">public class IStack {
+    public static final int INIT_LENGTH = 3;
+
+    /** 存放数据体*/
+    private Object body[];
+    private int maxLength;
+    /**栈顶的位置*/
+    private int top;
+
+    public IStack(){
+        /**
+         * 初始化长度 10
+         */
+        body = new Object[INIT_LENGTH];
+        maxLength = INIT_LENGTH;
+        top = 0;
+    }
+
+    /**
+     * 压栈 把数据存入栈顶（其实就是数组的尾部）
+     */
+    public boolean put(Object val){
+        if(this.maxLength == top){
+            Object[] newArray = new Object[this.maxLength * 2];
+            System.arraycopy(this.body, 0, newArray, 0, this.maxLength);
+            this.body = newArray;
+            this.maxLength *= 2;
+        }
+        this.body[top++] = val;
+        return true;
+    }
+
+    /**
+     * 出栈
+     * @return 弹出栈顶元素，并在栈内删除该元素
+     */
+    public Object pop(){
+        if( maxLength == 0 )
+            return null;
+        Object val = this.body[this.body.length -1];
+        this.body[this.body.length -1] = null;
+        this.top --;
+        return val;
+    }
+    /**
+     * 查看栈顶元素 
+     * @return
+     */
+    public Object top()  {
+        if( maxLength == 0)
+            return null;
+        return body[this.body.length - 1];
+    }
+
+    public boolean isEmpty(){
+        return top == 0 ;
+    }
+    /**
+     * 清空栈内元素
+     */
+    public void clear(){
+        this.body = new Object[INIT_LENGTH];
+        this.maxLength = INIT_LENGTH;
+        this.top = 0;
+    }
+		public void innerObject(){
+        int i =0;
+        for(Object val : body){
+            i++;
+            System.out.println(&quot;第 &quot;+ i +&quot;个元素 = &quot;+val);
+        }
+    }
+}
+</code></pre>
+<ol start="4">
+<li>小测试</li>
+</ol>
+<pre><code class="language-java">	public static void main(String[] args) {
+        //使用栈进行匹配，匹配括号是否是成对出现的
+        String str = &quot;()()(&quot;;
+        System.out.println(str);
+        String concat = &quot;&quot;;
+        IStack stack = new IStack();
+
+        boolean tag = true;
+        char left = '(';
+        char right = ')';
+        for(char ar : str.toCharArray()){
+            concat  = concat.concat(String.valueOf(ar));
+            if(ar == left){
+                stack.put(ar);
+                continue;
+            }
+            if(ar == right){
+                if (!stack.isEmpty()){
+                    stack.pop();
+                } else {
+                    System.out.println(&quot;当前字符串位置 = &quot;+concat);
+                    System.out.println(&quot;括号不匹配&quot;);
+                    tag = false;
+                    break;
+                }
+            }
+        }
+        if(stack.isEmpty() &amp;&amp; tag){
+            System.out.println(&quot;匹配成功&quot;);
+        } else {
+            System.out.println(&quot;匹配失败&quot;);
+            System.out.println(&quot;栈内数据&quot;);
+            stack.innerObject();
+        }
+    }
+</code></pre>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://425324438.github.io//post/shu-ju-jie-gou-dui-lie">
+                  <h3 class="post-title">
+                    数据结构--队列
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+
+<script type="application/javascript">
+
+AOS.init();
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>
