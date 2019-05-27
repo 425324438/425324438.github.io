@@ -9,7 +9,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="shortcut icon" href="https://425324438.github.io//favicon.ico?v=1558878327777">
+<link rel="shortcut icon" href="https://425324438.github.io//favicon.ico?v=1558969095613">
 <link rel="stylesheet" href="https://425324438.github.io//styles/main.css">
 
 
@@ -35,7 +35,7 @@
   <div class="top-container" data-aos="fade-right">
     <div class="top-header-container">
       <a class="site-title-container" href="https://425324438.github.io/">
-        <img src="https://425324438.github.io//images/avatar.png?v=1558878327777" class="site-logo">
+        <img src="https://425324438.github.io//images/avatar.png?v=1558969095613" class="site-logo">
         <h1 class="site-title">暮色雨声</h1>
       </a>
       <div class="menu-btn" @click="menuVisible = !menuVisible">
@@ -108,8 +108,166 @@
               </div>
             
             <div class="post-content">
-              <h1 id="linked链表">linked：链表</h1>
+              <h3 id="linked链表-单链表">linked：链表-&gt;单链表</h3>
 <!-- more --> 
+<p>本次示例实现的是单向链表</p>
+<ol>
+<li>
+<p>简述：链表是一种常用的组织有序数据的数据结构，它通过指针将一系列数据节点连接成一条数据链，
+是线性表的一种重要实现方式。相对于数组，链表具有更好的动态性，建立链表时无需预先知道数据总量，
+可以随机分配空间，可以高效地在链表中的任意位置实时插入或删除数据。链表的开销主要是访问的顺序
+性和组织链的空间损失。</p>
+</li>
+<li>
+<h5 id="单链表图解">单链表图解：</h5>
+</li>
+</ol>
+<p><img src="https://425324438.github.io//post-images/1558968350066.gif" alt=""></p>
+<ul>
+<li>单链表是最简单的一类链表，它的特点是仅有一个指针域指向后继节点（next），因此，对单链表的遍历只能从头至尾（通常是NULL空指针）顺序进行。</li>
+<li>每一个数据块儿都包含了两个数据：当前域存储的数据、下一个域的指针</li>
+</ul>
+<ol start="3">
+<li>其核心方法与list类似：</li>
+</ol>
+<blockquote>
+<pre><code>   get(index); 根据索引位置获取元素
+   add(value);往链表内添加元素
+   remove(index); 根据索引位置删除元素
+   size(); 获取链表总长度
+</code></pre>
+</blockquote>
+<ol start="4">
+<li>展示java代码的具体实现</li>
+</ol>
+<pre><code class="language-java">
+public class ILink {
+
+
+    /**总长度*/
+    private int size;
+    /**链*/
+    private Node node;
+
+    public void add(Object value){
+        Node node = new Node(value);
+        if(this.node == null){
+            this.node = node;
+        } else {
+            this.node.add(node);
+        }
+        size ++;
+    }
+
+    public Object get(int index){
+        if(index &gt; size -1){
+            return null;
+        }
+        int i =0;
+        if(i == index){
+            return this.node.value;
+        } else {
+            return this.node.next.get(index, i);
+        }
+    }
+
+    public boolean remove(int index){
+        if(index &gt; size -1){
+            return false;
+        }
+        int i = 0;
+        if(i == index){
+            this.node = this.node.next;
+        } else {
+            this.node.remove(index, i);
+        }
+        return true;
+    }
+
+    public int getSize(){
+        return this.size;
+    }
+
+    public void innerObj(){
+        System.out.println(&quot;输出链表的内容======= start&quot;);
+        Node node = this.node;
+        while (node.hashNext()){
+            System.out.print(node.getValue() + &quot;，&quot;);
+            node = node.next;
+        }
+        System.out.println(node.getValue());
+        System.out.println(&quot;输出链表的内容=======  end&quot;);
+    }
+
+    private class Node{
+
+        private Object value;
+        private Node next;
+
+        public Node(){}
+
+        public Node(Object value){
+            this.value = value;
+        }
+
+        public boolean hashNext(){
+            return this.next != null;
+        }
+
+        public void add(Node node){
+            if( hashNext()){
+                this.next.add(node);
+            } else {
+                this.next = node;
+            }
+        }
+
+        public Object get(int index, int currentIndex){
+            currentIndex ++;
+            if(index == currentIndex){
+                return this.value;
+            }
+            return next.get(index, currentIndex);
+        }
+
+        public boolean remove(int index, int currentIndex){
+            currentIndex ++;
+            if(index == currentIndex){
+                this.next = this.next.next;
+            } else {
+                this.next.remove(index, currentIndex);
+            }
+            return true;
+        }
+
+        private Object getValue(){
+            return this.value;
+        }
+        public void setValue(Object value){
+            this.value = value;
+        }
+    }
+}
+</code></pre>
+<ol start="5">
+<li>一些简单的测试</li>
+</ol>
+<pre><code class="language-java">    public static void main(String[] args) {
+        ILink link = new ILink();
+
+        link.add(123);
+        link.add(1234);
+        link.add(1222222);
+        link.add(12666666);
+
+        link.innerObj();
+
+        link.remove(0);
+
+        link.innerObj();
+
+    }
+</code></pre>
 
             </div>
             
