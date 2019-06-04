@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>数据结构--队列 | 暮色雨声</title>
+<title>java---内存模型 | 暮色雨声</title>
 <meta name="description" content="专注于java技术栈">
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -101,146 +101,80 @@
       <div class="main-container">
         <div class="content-container" data-aos="fade-up">
           <div class="post-detail">
-            <h2 class="post-title">数据结构--队列</h2>
-            <div class="post-date">2019-05-26</div>
+            <h2 class="post-title">java---内存模型</h2>
+            <div class="post-date">2019-06-02</div>
             
-              <div class="feature-container" style="background-image: url('https://425324438.github.io//post-images/shu-ju-jie-gou-dui-lie.jpg')">
+              <div class="feature-container" style="background-image: url('https://425324438.github.io//post-images/B-SCzJ3k0.jpeg')">
               </div>
             
             <div class="post-content">
-              <h1 id="queu队列">Queu：队列</h1>
-<pre><code>	队列先进先出原则，比栈要复杂一点
-</code></pre>
-<ol>
-<li>队列：先进先出原则，内部数组对外部不可见，只能通过提供的方法来获取内部数据</li>
-<li>核心方法：</li>
+              <ol>
+<li>jvm内存区域</li>
 </ol>
-<blockquote>
-<pre><code>   enqueue：从队列尾部添加数据
-   dequeu: 从队列头部获取数据,并删除头部数据
-   head: 查看队列第一个数据
-   tail: 查看队列最后一位数据
-   isEmpty: 判断队列是否为空
-   clear: 清空队列数据  		
+<ul>
+<li>寄存器：程序中无法控制的区域</li>
+<li>栈：存放基本类型</li>
+<li>堆：存放程序运行时创建的对象（对象临时存贮区）</li>
+<li>静态域：存放对象中用static定义的静态成员</li>
+<li>常量池：存放常量(public static final),String 也是常量</li>
+</ul>
+<!-- more --> 
+<ol start="2">
+<li>详述</li>
+</ol>
+<p>寄存器：</p>
+<pre><code>		JVM只设置了4个最为常用的寄存器。pc程序计数器、optop操作数栈顶指针、frame当前执行环境指针、
+		
+vars指向当前执行环境中第一个局部变量的指针、所有寄存器均为32位。pc用于记录程序的执行。
+optop,frame和vars用于记录指向Java栈区的指针。
+寄存器不会抛出StackOverflowError、OutOfMemoryError，所以我们在使用过程中也感知不到它的存在
 </code></pre>
+<p>栈：</p>
+<pre><code>	java虚拟机会为每一个线程创建独立的栈（非线程共享）。栈中存储的是对象的引用（栈针），
+</code></pre>
+<p>当线程结束时会被立即释放掉</p>
+<p>堆：</p>
+<blockquote>
+<p>新生代（Young）
+老年代（Old）
+永久代（Perm Area ）</p>
 </blockquote>
-<pre><code>			如果有需要的话可以自行扩展
+<pre><code>只要是创建出来的对象都会在堆内存中，该块内存也是整个jvm内存中最大的一块儿区域。堆内存分为新生代（Young）
+和老年代（Old）、永久代三个区域，每个区域对应着各自的GC。新生代（Young）又分为两个区域：伊甸园区（Eden）和
+生存者区（Survivor）。刚创建出来的对象是在存伊甸园区的，该区域对应的是Minor GC。经过MinorGC之后还在存活
+的对象会把他们放入生还者区（Survivor）ps：其实就是复制过去。生还者区（Survivor）的GC称作Full GC，该分区内
+部是由两个相同大小的区构成的（jdk1.8之前），Minor GC复制过来的数据会进入正在使用的那个区中，当生存者区
+（Survivor）开始执行Full GC的时候，其实是把第一个区的数据拷贝到第二个区（此时生还者区是停止对外工作的），
+在拷贝的过程中将长期未使用的对象丢弃掉（长期：相对而言的，jvm内部实现标记-清除算法，监控对象是否长期未使
+用），直到整个复制工作全部完成才能再次提供服务。年轻代的Minor GC与FullGC类似的操作把对象转移到老年代中。
+老年代（Old）的工作流程一样，丢弃不再使用的数据，把还在使用的数据放入永久带中
+</code></pre>
+<p>静态域：</p>
+<pre><code>	存放在对象中用static定义的静态成员
+</code></pre>
+<p>常量池：</p>
+<pre><code>常量池指的是在编译期被确定，并被保存在已编译的.class文件中的一些数据。除了包含代码中所定义的各种基本类型（如int、long等等）和对象型（如String及数组）的常量值(final)还包含一些以文本形式出现的符号引用，比如： 
 </code></pre>
 <ol start="3">
-<li>java代码</li>
-</ol>
-<pre><code class="language-java">
-public class IQueu {
-
-    //队列，先进先出原则，不允许插队
-    private Object[] body;
-
-    //标记队列的头部
-    private int head;
-
-    //标记队列的尾部
-    private int tail;
-
-    //标记队列内容长度
-    private int size;
-
-    public IQueu(){
-        this.body = new Object[10];
-        this.head = 0;
-        this.tail = 0;
-    }
-
-    /**
-     * 从队列尾部添加数据
-     */
-    public void enqueue(Object val){
-
-        if(this.tail == this.body.length &amp;&amp; this.body[0] != null){
-            //扩容
-            Object[] newArray = new Object[this.tail * 2];
-            System.arraycopy(this.body, 0, newArray, 0, this.tail);
-            this.body = newArray;
-//            throw new RuntimeException(&quot;队列已达到最大长度&quot;);
-        } else {
-            this.body[tail] = val;
-            this.tail++;
-        }
-        if(tail == body.length){
-            tail = 0;
-        }
-        size ++;
-    }
-
-    /**
-     * 从队列头部获取数据,并删除头部数据
-     */
-    public Object dequeu(){
-        Object val = this.body[this.head];
-        this.body[this.head] = null;
-        this.head++;
-        if(this.head  == this.body.length){
-            this.head = 0;
-        }
-        size --;
-        return val;
-    }
-
-    public Object head(){
-        return this.body[this.head];
-    }
-
-    public Object tail(){
-        return this.body[this.tail];
-    }
-
-    public boolean isEmpty(){
-        System.out.println(&quot;队列头部的位置&quot;+this.head+&quot;，尾部的位置&quot;+this.tail+&quot;,队列长度：&quot;+this.size);
-        return this.size ==0;
-    }
+<li>
+<p>StackOverflowError、OutOfMemoryError的出发机制</p>
+<pre><code> StackOverflowError：jvm会为每一个线程创建栈。当一个线程在执行过程中不允许获取更大的本地方法栈（虚拟机
+ 栈）则抛出StackOverflowError。
+ OutOfMemoryError：我的理解是程序要启动新的线程，为新的线程获取栈空间的时候发现内存不够了就会抛出此异常
+ 堆大小由-Xmx和-Xms来调节。
 </code></pre>
-<ol start="4">
-<li>实现一个<a href="https://baijiahao.baidu.com/s?id=1606651492697783298&amp;wfr=spider&amp;for=pc">斐波那契序列</a></li>
+</li>
 </ol>
-<pre><code class="language-java">    public static void main(String[] args) {
-        IQueu queu = new IQueu();
-        Integer fibonacci = queu.fibonacci(3);
-        System.out.println(fibonacci);
-
-
-    }
-
-    //斐波那契序列
-    public Integer fibonacci(int n){
-        IQueu queu = new IQueu();
-        int index = 0;
-
-        queu.enqueue(1);
-        queu.enqueue(1);
-
-        while (index &lt; n -2){
-
-            //取出队列的第一个元素
-            Integer del_item = (Integer) queu.dequeu();
-
-            Integer head_item = (Integer) queu.head();
-            Integer next_item = head_item + del_item;
-            queu.enqueue(next_item);
-            index ++;
-        }
-
-        queu.dequeu();
-
-        return (Integer)queu.head();
-
-    }
-</code></pre>
+<p>参考：
+<a href="https://mp.weixin.qq.com/s/gvsnsrY4E1zOmJdVxenD0w">https://mp.weixin.qq.com/s/gvsnsrY4E1zOmJdVxenD0w</a>
+<a href="https://www.cnblogs.com/SaraMoring/p/5687466.html">https://www.cnblogs.com/SaraMoring/p/5687466.html</a></p>
 
             </div>
             
               <div class="tag-container">
                 
-                  <a href="https://425324438.github.io//tag/ZJtA2s596" class="tag">
-                    数据结构
+                  <a href="https://425324438.github.io//tag/xjS-Y00IO" class="tag">
+                    java内存结构
                   </a>
                 
               </div>
@@ -248,9 +182,9 @@ public class IQueu {
             
               <div class="next-post">
                 <div class="next">下一篇</div>
-                <a href="https://425324438.github.io//post/hello-gridea">
+                <a href="https://425324438.github.io//post/BABQZgBZ-">
                   <h3 class="post-title">
-                    Hello Gridea
+                    SpringBoot 统一异常处理
                   </h3>
                 </a>
               </div>
